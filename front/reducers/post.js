@@ -41,19 +41,29 @@ export const initialState = {
 
 // 액션 이름을 상수로 빼둔다=>오타확률을 낮춘다
 const ADD_POST = 'ADD_POST'
+
 export const addPost = {
   type: ADD_POST
 }
-const dummyPost = {
-  id: 2,
-  content: 'dummy data',
-  User: {
-    id: 1,
-    nickname: 'foo'
-  },
-  Images: [],
-  Comments: []
+
+export const addPostAction = (data) => {
+  console.log('data:', data)
+  return {
+    type: ADD_POST,
+    data
+  }
 }
+
+// const dummyPost = {
+//   id: 2,
+//   content: 'dummy data',
+//   User: {
+//     id: 1,
+//     nickname: 'foo'
+//   },
+//   Images: [],
+//   Comments: []
+// }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -61,7 +71,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         // dummyPost를 앞에다가 추가해줘야 새로운 게시글이 위에 올라간다.
-        mainPosts: [dummyPost, ...state.mainPosts],
+        mainPosts: [{
+          id: state.id + 1,
+          content: action.data,
+          ...state
+        }, ...state.mainPosts],
         postAdded: true
       }
     default:

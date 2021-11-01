@@ -1,9 +1,13 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-const PostCard = () => {
+const PostCard = ({ post }) => {
   return (
-    <div>PostCard</div>
+    <div>{post.content}</div>
   )
 }
 
+PostCard.propTypes = {
+  post: PropTypes.string.isRequired
+}
 export default PostCard
