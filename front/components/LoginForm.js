@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import useInput from "../hooks/useInput"
 
 import { useDispatch } from "react-redux"
-import { loginAction } from "../reducers"
+import { loginAction } from "../reducers/user"
 // styled-components는 css적듯이.
 // 인라인 스타일에서의 리렌더링 최적화
 // const ButtonWrapper = styled.div`
@@ -28,7 +28,6 @@ const LoginForm = () => {
   const style = useMemo(() => ({ marginTop: 10}), [])
 
   const onSubmitForm = useCallback(() => {
-    console.log(id, password)
     dispatch(loginAction({ id, password }))
   }, [id, password])
 
