@@ -4,7 +4,7 @@ export const initialState = {
   signUpData: {},
   loginData: {}
 }
-
+ 
 // 그때 그때 액션을 만드는 action creater
 export const loginAction = (data) => {
   return {

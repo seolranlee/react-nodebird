@@ -17,7 +17,7 @@ const PostForm = () => {
 
   const onSubmit = useCallback(() => {
     dispatch(addPostAction(text))
-    setText('')
+    setText()
   }, [text])
 
   const onClickImageUpload = useCallback(() => {
