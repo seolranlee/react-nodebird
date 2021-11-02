@@ -54,16 +54,16 @@ export const addPostAction = (data) => {
   }
 }
 
-// const dummyPost = {
-//   id: 2,
-//   content: 'dummy data',
-//   User: {
-//     id: 1,
-//     nickname: 'foo'
-//   },
-//   Images: [],
-//   Comments: []
-// }
+const dummyPost = {
+  id: 2,
+  content: 'dummy data',
+  User: {
+    id: 1,
+    nickname: 'foo'
+  },
+  Images: [],
+  Comments: []
+}
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -71,11 +71,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         // dummyPost를 앞에다가 추가해줘야 새로운 게시글이 위에 올라간다.
-        mainPosts: [{
-          id: state.id + 1,
-          content: action.data,
-          ...state
-        }, ...state.mainPosts],
+        mainPosts: [dummyPost, ...state.mainPosts],
         postAdded: true
       }
     default:
