@@ -1,25 +1,29 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { Form, Input, Button } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 // import useInput from '../hooks/useInput'
 
 import { addPost } from '../reducers/post'
+import useInput from '../hooks/useInput'
 
 const PostForm = () => {
-  const { imagePaths } = useSelector((state) => state.post)
-  const [text, setText] = useState('')
-  const imageInput = useRef()
+  const { imagePaths, addPostDone } = useSelector((state) => state.post)
+  const [text, onChangeText, setText] = useInput('')
+
+  useEffect(() => {
+    // setText('')의 위치는 여기여야.
+    if (addPostDone) setText('')
+  }, [addPostDone])
 
   const dispatch = useDispatch()
-  const onChangeText = useCallback((e) => {
-    setText(e.target.value)
-  }, [])
-
   const onSubmit = useCallback(() => {
     dispatch(addPost(text))
-    setText()
+    // setText의 위치
+    // 서버가 에러가 나면 어떡해?
+    // setText('')
   }, [text])
 
+  const imageInput = useRef()
   const onClickImageUpload = useCallback(() => {
     imageInput.current.click()
   }, [imageInput.current])

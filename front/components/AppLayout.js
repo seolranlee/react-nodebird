@@ -16,7 +16,7 @@ const AppLayout = ({ children }) => {
   // const isLoggedIn = useSelector((state) => state.user.isLoggedIn)
 
   // 구조분해할당
-  const { isLoggedIn } = useSelector((state) => state.user)
+  const { me } = useSelector((state) => state.user)
 
   return (
     <div>
@@ -38,7 +38,7 @@ const AppLayout = ({ children }) => {
       <Row gutter={8}>
         {/* xs: 모바일. sm: 태블릿. md: 작은 데스크탑. 24칸이 최대. */}
         <Col xs={24} md={6}>
-          {isLoggedIn ? <UserProfile /> : <LoginForm />}
+          {me ? <UserProfile /> : <LoginForm />}
         </Col>
         <Col xs={24} md={12}>
           {children}
