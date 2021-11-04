@@ -3,7 +3,7 @@ import { Form, Input, Button } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 // import useInput from '../hooks/useInput'
 
-import { addPostAction } from '../reducers/post'
+import { addPost } from '../reducers/post'
 
 const PostForm = () => {
   const { imagePaths } = useSelector((state) => state.post)
@@ -16,7 +16,7 @@ const PostForm = () => {
   }, [])
 
   const onSubmit = useCallback(() => {
-    dispatch(addPostAction(text))
+    dispatch(addPost(text))
     setText()
   }, [text])
 
