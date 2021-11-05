@@ -45,13 +45,20 @@ export const UNFOLLOW_REQUEST = 'UNFOLLOW_REQUEST'
 export const UNFOLLOW_SUCCESS = 'UNFOLLOW_SUCCESS'
 export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE'
 
+// 내 게시글이 추가되는 액션
+// post 데이터가 변경(추가/삭제)될 때 user 데이터(Posts 배열)도 변경이 필요하다. => post saga에서 액션이 들어오는 걸 감지할 수 있다.
+export const ADD_POST_TO_ME = 'ADD_POST_TO_ME'
+export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME'
+
+
+// data관련된건 reducer에서
  const dummyUser = (data) => ({ 
    ...data, 
    nickname: 'seolranlee',
    id: 1,
-   Posts: [],
-   Followings: [],
-   Followers: []
+   Posts: [{ id: 1 } ],
+   Followings: [{ nickname: 'yeonju' }, { nickname: 'foo' }, { nickname: 'bar' }],
+   Followers: [{ nickname: 'yeonju' }, { nickname: 'foo' }, { nickname: 'bar' }]
   })
 // 그때 그때 액션을 만드는 action creater
 export const loginRequestAction = (data) => {
@@ -149,6 +156,22 @@ const reducer = (state = initialState, action) => {
         ...state,
         changeNicknameLoading: false,
         changeNicknameError: action.error,
+      }
+    case ADD_POST_TO_ME:
+      return {
+        ...state,
+        me: {
+          ...state.me,
+          Posts: [{ id: action.data }, ...state.me.Posts]
+        }
+      }
+    case REMOVE_POST_OF_ME:
+      return {
+        ...state,
+        me: {
+          ...state.me,
+          Posts: state.me.Posts.filter((v) => v.id === action.data)
+        }
       }
     default:
       return state
