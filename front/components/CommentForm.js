@@ -7,7 +7,7 @@ import { ADD_COMMENT_REQUEST } from '../reducers/post'
 
 const CommentForm = ({ post }) => {  
   const id = useSelector((state) => state.user.me?.id)
-  const { addCommentDone } = useSelector((state) => state.post)
+  const { addCommentDone, addCommentLoading } = useSelector((state) => state.post)
   const [commentText, onChangeCommentText, setCommentText] = useInput('')
   
   useEffect(() => {
@@ -16,7 +16,7 @@ const CommentForm = ({ post }) => {
 
   const dispatch = useDispatch()
   const onSubmitComment = useCallback(() => {
-    // post를 받아온 이유: 게시글 id아래에 댓글을 달거기 때문에
+    // post를 props로 받아온 이유: 게시글 id아래에 댓글을 달거기 때문에
     dispatch({
       type: ADD_COMMENT_REQUEST,
       data: { content: commentText, postId: post.id, userId: id }
@@ -27,7 +27,12 @@ const CommentForm = ({ post }) => {
     <Form onFinish={onSubmitComment}>
       <Form.Item style={{ position: 'relative', margin: 0 }}>
         <Input.TextArea value={commentText} onChange={onChangeCommentText} rows={4} />
-        <Button style={{ position: 'absolute', right: 8, bottom: -48 }} type="primary" htmlType="submit">write</Button>
+        <Button 
+          style={{ position: 'absolute', right: 8, bottom: -48, zIndex: 1 }} 
+          type="primary" 
+          htmlType="submit" 
+          loading={addCommentLoading}
+        >write</Button>
       </Form.Item>
     </Form>
   )

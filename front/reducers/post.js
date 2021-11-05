@@ -1,9 +1,11 @@
 // reducer중심으로 생각.
 // 화면이 아니라 데이터를 먼저 구성.
+import shortid from 'shortid'
+import shortId from 'shortid'
 
 export const initialState = {
   mainPosts: [{
-    id: 1,
+    id: shortId.generate(),
     User: {
       id: 1,
       nickname: 'seolranlee'
@@ -38,7 +40,10 @@ export const initialState = {
   imagePaths: [],
   addPostLoading: false,
   addPostDone: false,
-  addPostError: null
+  addPostError: null,
+  addCommentLoading: false,
+  addCommentDone: false,
+  addCommentError: null
 }
 
 // 액션 이름을 상수로 빼둔다=>오타확률을 낮춘다
@@ -60,17 +65,26 @@ export const addComment = (data) => ({
   data
 })
 
-const dummyPost = {
-  id: 2,
-  content: 'dummy data',
+const dummyPost = (data) => ({
+  // 겹치지 않는 랜덤한 아이디를 생성해서 return해주는 npm.
+  id: shortId.generate(),
+  content: data,
   User: {
     id: 1,
     nickname: 'foo'
   },
   Images: [],
   Comments: []
-}
+})
 
+const dummyComment = (data) => ({
+  id: shortid.generate(),
+  content: data,
+  User: {
+    id: 1,
+    nickname: 'seolranlee'
+  }
+})
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_POST_REQUEST:
@@ -84,7 +98,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         // dummyPost를 앞에다가 추가해줘야 새로운 게시글이 위에 올라간다.
-        mainPosts: [dummyPost, ...state.mainPosts],
+        mainPosts: [dummyPost(action.data), ...state.mainPosts],
         addPostLoading: false,
         addPostDone: true
       }
@@ -102,8 +116,14 @@ const reducer = (state = initialState, action) => {
         addCommentError: null
       }
     case ADD_COMMENT_SUCCESS:
+      const postIndex = state.mainPosts.findIndex((v) => v.id === action.data.postId)
+      const post = {...state.mainPosts[postIndex]}
+      post.Comments =  [dummyComment(action.data.content), ...post.Comments]
+      const mainPosts = [...state.mainPosts]
+      mainPosts[postIndex] = post
       return {
         ...state,
+        mainPosts,
         addCommentLoading: false,
         addCommentDone: true
       }
