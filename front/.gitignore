@@ -46,6 +46,7 @@ bower_components
 npm-debug.log
 yarn-error.log
 .bowerrc
+.next
 
 # Karma test files
 .reports
