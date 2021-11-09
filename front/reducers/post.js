@@ -5,48 +5,52 @@ import faker from 'faker'
 // 화면이 아니라 데이터를 먼저 구성.
 
 export const initialState = {
-  mainPosts: [{
-    id: shortId.generate(),
-    User: {
-      id: 1,
-      nickname: 'seolranlee'
-    },
-    content: '첫 번째 게시글 #해시태그 #익스프레스',
-    Images: [
-      {
-        id: shortId.generate(),
-        src: 'https://ccdn.lezhin.com/v2/banners/explore_boys/images/17467.webp?updated=1634792020109'
-      },
-      {
-        id: shortId.generate(),
-        src: 'https://ccdn.lezhin.com/v2/banners/explore_boys/images/17630.webp?updated=1635250994567'
-      },
-      {
-        id: shortId.generate(),
-        src: 'https://ccdn.lezhin.com/v2/banners/explore_boys/images/17303.webp?updated=1634553971673s'
-      }
-    ],
-    Comments: [
-      {
-        id: shortId.generate(),
-        User: {
-          id: shortId.generate(),
-          nickname: 'user1'
-        },
-        content: '코멘트1'
-      },
-      {
-        id: shortId.generate(),
-        User: {
-          id: shortId.generate(),
-          nickname: 'user2'
-        },
-        content: '코멘트2'
-      }
-    ]
-  }],
+  // mainPosts: [{
+  //   id: shortId.generate(),
+  //   User: {
+  //     id: 1,
+  //     nickname: 'seolranlee'
+  //   },
+  //   content: '첫 번째 게시글 #해시태그 #익스프레스',
+  //   Images: [
+  //     {
+  //       id: shortId.generate(),
+  //       src: 'https://ccdn.lezhin.com/v2/banners/explore_boys/images/17467.webp?updated=1634792020109'
+  //     },
+  //     {
+  //       id: shortId.generate(),
+  //       src: 'https://ccdn.lezhin.com/v2/banners/explore_boys/images/17630.webp?updated=1635250994567'
+  //     },
+  //     {
+  //       id: shortId.generate(),
+  //       src: 'https://ccdn.lezhin.com/v2/banners/explore_boys/images/17303.webp?updated=1634553971673s'
+  //     }
+  //   ],
+  //   Comments: [
+  //     {
+  //       id: shortId.generate(),
+  //       User: {
+  //         id: shortId.generate(),
+  //         nickname: 'user1'
+  //       },
+  //       content: '코멘트1'
+  //     },
+  //     {
+  //       id: shortId.generate(),
+  //       User: {
+  //         id: shortId.generate(),
+  //         nickname: 'user2'
+  //       },
+  //       content: '코멘트2'
+  //     }
+  //   ]
+  // }],
+  mainPosts: [],
   imagePaths: [],
-  addPostLoading: false,
+  hasMorePosts: true,
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
   addPostDone: false,
   addPostError: null,
   removePostLoading: false,
@@ -57,28 +61,33 @@ export const initialState = {
   addCommentError: null
 }
 
-initialState.mainPosts = initialState.mainPosts.concat(
-  Array(20).fill().map(() => ({
+export const generateDummyPost = (number) => Array(number).fill().map(() => ({
+  id: shortId.generate(),
+  User: {
     id: shortId.generate(),
+    nickname: faker.name.findName()
+  },
+  content: faker.lorem.paragraph(),
+  Images: [{
+    src: faker.image.image()
+  }],
+  Comments: [{
     User: {
       id: shortId.generate(),
       nickname: faker.name.findName()
     },
-    content: faker.lorem.paragraph(),
-    Images: [{
-      src: faker.image.image()
-    }],
-    Comments: [{
-      User: {
-        id: shortId.generate(),
-        nickname: faker.name.findName()
-      },
-      content: faker.lorem.sentence(),
-    }],
-  }))
-)
+    content: faker.lorem.sentence(),
+  }],
+}))
+
+// 사가가 맨 처음에 불러온다.
+// initialState.mainPosts = initialState.mainPosts.concat(generateDummyPost(10))
 
 // 액션 이름을 상수로 빼둔다=>오타확률을 낮춘다
+export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST'
+export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS'
+export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE'
+
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST'
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS'
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE'
@@ -128,13 +137,27 @@ const reducer = (state = initialState, action) => {
   // draft는 불변성 상관없이 막 바꿔도 되낟.
   return produce(state, (draft) => {
     switch (action.type) {
+      case LOAD_POSTS_REQUEST:
+        draft.loadPostsLoading = true
+        draft.loadPostsDone = false
+        draft.loadPostsError = null
+        break
+      case LOAD_POSTS_SUCCESS:
+        draft.mainPosts = action.data.concat(draft.mainPosts)
+        draft.loadPostsLoading = false
+        draft.loadPostsDone = true
+        draft.hasMorePosts = draft.mainPosts.length < 50
+        break
+      case LOAD_POSTS_FAILURE:
+        draft.loadPostsLoading = false
+        draft.loadPostsError = action.error
+        break
       case ADD_POST_REQUEST:
         draft.addPostLoading = true
         draft.addPostDone = false
         draft.addPostError = null
         break
       case ADD_POST_SUCCESS:
-        console.log('ADD_POST_SUCCESS draft:', draft)
         draft.mainPosts.unshift(dummyPost(action.data))
         draft.addPostLoading = false
         draft.addPostDone = true
