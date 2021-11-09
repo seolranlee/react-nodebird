@@ -67,7 +67,6 @@ function logoutAPI() {
 
 function* logOut() {
   try {
-    console.log('saga loginOut')
     // const result = yield call(logoutAPI)
     yield delay(1000)
     yield put({

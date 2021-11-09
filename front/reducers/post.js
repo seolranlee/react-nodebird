@@ -1,5 +1,6 @@
 import shortId from 'shortid'
 import produce from 'immer'
+import faker from 'faker'
 // reducer중심으로 생각.
 // 화면이 아니라 데이터를 먼저 구성.
 
@@ -55,6 +56,27 @@ export const initialState = {
   addCommentDone: false,
   addCommentError: null
 }
+
+initialState.mainPosts = initialState.mainPosts.concat(
+  Array(20).fill().map(() => ({
+    id: shortId.generate(),
+    User: {
+      id: shortId.generate(),
+      nickname: faker.name.findName()
+    },
+    content: faker.lorem.paragraph(),
+    Images: [{
+      src: faker.image.image()
+    }],
+    Comments: [{
+      User: {
+        id: shortId.generate(),
+        nickname: faker.name.findName()
+      },
+      content: faker.lorem.sentence(),
+    }],
+  }))
+)
 
 // 액션 이름을 상수로 빼둔다=>오타확률을 낮춘다
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST'
