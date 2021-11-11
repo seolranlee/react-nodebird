@@ -4,8 +4,8 @@ import {
   LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE, 
   LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE, 
   SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, 
-  FOLLOW_REQUEST, UNFOLLOW_REQUEST, FOLLOW_SUCCESS, 
-  FOLLOW_FAILURE, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE
+  FOLLOW_REQUEST, FOLLOW_SUCCESS, FOLLOW_FAILURE,
+  UNFOLLOW_REQUEST, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE
 } from '../reducers/user'
 
 // 서버에 요청하는 함수는 일반 함수!!!
@@ -40,6 +40,7 @@ function* logIn(action) {
   }
 }
 
+// follow
 function followAPI() {
   return axios.post('/api/follow')
 }
@@ -60,7 +61,7 @@ function* follow(action) {
   }
 }
 
-
+// unfollow
 function unfollowAPI() {
   return axios.post('/api/unfollow')
 }
@@ -81,6 +82,45 @@ function* unfollow(action) {
   }
 }
 
+// logout
+function logoutAPI() {
+  return axios.post('/api/logout')
+}
+
+function* logOut() {
+  try {
+    // const result = yield call(logoutAPI)
+    yield delay(1000)
+    yield put({
+      type: LOG_OUT_SUCCESS,
+    })
+  } catch (err) {
+    yield put({
+      type: LOG_OUT_FAILURE,
+      error: err.response.data
+    })
+  }
+}
+
+// signUp
+function signUpAPI() {
+  return axios.post('/api/signUp')
+}
+
+function* signUp() {
+  try {
+    // const result = yield call(signUpAPI)
+    yield delay(1000)
+    yield put({
+      type: SIGN_UP_SUCCESS,
+    })
+  } catch (err) {
+    yield put({
+      type: SIGN_UP_FAILURE,
+      error: err.response.data
+    })
+  }
+}
 
 function* watchFollow() {
   yield takeLatest(FOLLOW_REQUEST, follow)
@@ -110,47 +150,6 @@ function* watchLogin() {
   // 2초동안에 로그인은 한번만 요청
   // yield throttle('LOG_IN_REQUEST', logIn, 2000)
 
-}
-
-// logout
-function logoutAPI() {
-  return axios.post('/api/logout')
-}
-
-function* logOut() {
-  try {
-    // const result = yield call(logoutAPI)
-    yield delay(1000)
-    yield put({
-      type: LOG_OUT_SUCCESS,
-    })
-  } catch (err) {
-    yield put({
-      type: LOG_OUT_FAILURE,
-      error: err.response.data
-    })
-  }
-}
-
-
-// signUp
-function signUpAPI() {
-  return axios.post('/api/signUp')
-}
-
-function* signUp() {
-  try {
-    // const result = yield call(signUpAPI)
-    yield delay(1000)
-    yield put({
-      type: SIGN_UP_SUCCESS,
-    })
-  } catch (err) {
-    yield put({
-      type: SIGN_UP_FAILURE,
-      error: err.response.data
-    })
-  }
 }
 
 function* watchLogOut() {
