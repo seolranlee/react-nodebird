@@ -3,6 +3,7 @@
 // node는 import, export default 쓰지 않는다.
 // require, module.exports
 const express = require('express')
+const cors = require('cors')
 const postRouter = require('./routes/post')
 const userRouter = require('./routes/user')
 const db = require('./models')
@@ -15,6 +16,10 @@ db.sequelize.sync()
 
 
 // use() 미들웨어. 라우터보다 위에 올려줘야한다. 순서가 매우 중요.
+app.use(cors({
+  origin: true,  // 보낸 곳의 주소가 자동으로 들어간다.
+  // credentials: false
+})) // 보안상 위험.
 // 프론트에서 보낸 data를 req.body에 넣어주는 역할
 // 프론트에서 json형태로 보낼 때
 app.use(express.json())
