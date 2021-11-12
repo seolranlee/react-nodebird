@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     db.Post.belongsTo(db.User)
     db.Post.hasMany(db.Comment)
     db.Post.hasMany(db.Image)
-    db.Post.belongsToMany(db.Hashtag)
+    db.Post.belongsToMany(db.Hashtag, { through: 'PostHashtag' })
     // 추후에 as에 따라서 post.getLikers처럼 게시글에 좋아요를 누른 사람을 가져오게 된다.
     // through도 대문자, 별칭도 대문자.
     db.Post.belongsToMany(db.User, { through: 'Like', as: 'Likers' })

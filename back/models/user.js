@@ -30,9 +30,9 @@ module.exports = (sequelize, DataTypes) => {
 
     // User와 User끼리 할 때에는 foreignKey가 필요하다.
     // 나를 팔로잉 하는 사람들을 찾으려면 나(following)를 먼저 찾아야 해서 foreignKey는 FollowingId
-    db.User.belongsToMany(db.user, { through: 'Follow', as: 'Followers', foreignKey: 'FollowingId' })
+    db.User.belongsToMany(db.User, { through: 'Follow', as: 'Followers', foreignKey: 'FollowingId' })
     // 내가 팔로잉 하는 사람들을 찾으려면 나(follower)를 먼저 찾아야 해서 foreignKey는 FollowerId
-    db.User.belongsToMany(db.user, { through: 'Follow', as: 'Followings', foreignKey: 'FollowerId'})
+    db.User.belongsToMany(db.User, { through: 'Follow', as: 'Followings', foreignKey: 'FollowerId'})
   }
   return User;
 }
