@@ -21,6 +21,18 @@ module.exports = (sequelize, DataTypes) => {
     charset: 'utf8',
     collate: 'utf8_general_ci',  // 한글 저장
   })
-  User.associate = (db) => {}
+  User.associate = (db) => {
+    // 모델간의 관계 설정
+    // 유저가 포스트를 여러개 쓸 수 있다.
+    db.User.hasMany(db.Post)
+    db.User.hasMany(db.Comment)
+    db.User.belongsToMany(db.Post, { through: 'Like', as: 'Liked' })
+
+    // User와 User끼리 할 때에는 foreignKey가 필요하다.
+    // 나를 팔로잉 하는 사람들을 찾으려면 나(following)를 먼저 찾아야 해서 foreignKey는 FollowingId
+    db.User.belongsToMany(db.user, { through: 'Follow', as: 'Followers', foreignKey: 'FollowingId' })
+    // 내가 팔로잉 하는 사람들을 찾으려면 나(follower)를 먼저 찾아야 해서 foreignKey는 FollowerId
+    db.User.belongsToMany(db.user, { through: 'Follow', as: 'Followings', foreignKey: 'FollowerId'})
+  }
   return User;
 }

@@ -6,6 +6,7 @@ const db = {}
 // sequelize가 node와 mysql을 연결해준다.
 const sequelize = new Sequelize(config.database, config.username, config.password, config)
 
+
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
