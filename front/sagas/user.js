@@ -11,24 +11,21 @@ import {
 // 서버에 요청하는 함수는 일반 함수!!!
 // login
 function loginAPI(data) {
-  return axios.post('/api/login', data)
+  return axios.post('/user/login', data)
 }
 
 function* logIn(action) {
   try {
-    console.log('saga login')
     // call: 동기 함수 호출: 결과값을 기다리고 다음 줄로 넘어간다. await이랑 비슷하다고 생각
     // fork: 비동기 함수 호출(non-blocking): 결과값을 기다리지 않고 다음 줄로 넘어간다.
-    // const result = yield call(loginAPI, action.data) // call을 써야 한다!!
-
-    yield delay(1000) // 서버 구현 전까지 비동기적인 효과를 위해
+    const result = yield call(loginAPI, action.data) // call을 써야 한다!!
     // effect앞에는 항상 yield를 붙인다.
     // put은 dispatch.
     yield put(
       // action 객체
       {
         type: LOG_IN_SUCCESS,
-        data: action.data
+        data: result.data
       }
     )
     // const result = yield fork(loginAPI)
@@ -104,7 +101,7 @@ function* logOut() {
 
 // signUp
 function signUpAPI(data) {
-  return axios.post('http://localhost:3065/user', data)
+  return axios.post('/user', data)
 }
 
 function* signUp(action) {

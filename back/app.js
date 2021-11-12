@@ -7,13 +7,15 @@ const cors = require('cors')
 const postRouter = require('./routes/post')
 const userRouter = require('./routes/user')
 const db = require('./models')
+const passportConfig = require('./passport')
+
 const app = express()
 db.sequelize.sync()
   .then(() => {
     console.log('db 연결 성공')
   })
   .catch(console.error)
-
+passportConfig()
 
 // use() 미들웨어. 라우터보다 위에 올려줘야한다. 순서가 매우 중요.
 app.use(cors({

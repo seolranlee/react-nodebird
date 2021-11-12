@@ -1,8 +1,38 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
+const passport = require('passport')
 // db.User
 const { User } = require('../models')
 const router = express.Router()
+
+// 애매한 동작은 대부분 POST 이다.
+// 미들웨어를 확장하는 방법(req, res, next)를 쓸 수 있게
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    // 서버에러
+    if (err) {
+      console.error(err)
+      return next(err)
+    }
+    // 클라이언트 에러
+    if (info) {
+      return res.status(401).send(info.reason)
+    }
+
+    // 우리 서비스 로그인 성공시
+    // 우리 서비스 로그인이 아니라 passport login
+    return req.login(user, async (loginErr) => {
+      if (loginErr) {
+        console.err(loginErr)
+        return next(loginErr)
+      }
+      // 사용자 정보를 프론트로 전송.
+      return res.json(user)
+    })
+  })(req, res, next) => {
+
+  }
+})  // PSOT /user/login
 
 router.post('/', async (req, res, next) => {  // POST /user/'
   try {
@@ -40,5 +70,6 @@ router.post('/', async (req, res, next) => {  // POST /user/'
   }
   
 })
+
 
 module.exports = router
