@@ -4,6 +4,7 @@
 // require, module.exports
 const express = require('express')
 const postRouter = require('./routes/post')
+const userRouter = require('./routes/user')
 const db = require('./models')
 const app = express()
 db.sequelize.sync()
@@ -11,6 +12,15 @@ db.sequelize.sync()
     console.log('db 연결 성공')
   })
   .catch(console.error)
+
+
+// use() 미들웨어. 라우터보다 위에 올려줘야한다. 순서가 매우 중요.
+// 프론트에서 보낸 data를 req.body에 넣어주는 역할
+// 프론트에서 json형태로 보낼 때
+app.use(express.json())
+// 프론트에서 form submit할 때
+app.use(express.urlencoded({ extended: true }))
+
 // app.get: 가져오다
 // app.post: 생성하다
 // app.put: 전체수정
@@ -38,6 +48,7 @@ app.get('/post', (req, res) => {
 
 // 중복되는 url(/post)을 앞으로 뽑아줌.
 app.use('/post', postRouter)
+app.use('/user', userRouter)
 
 app.listen(3065, () => {
   console.log('서버 실행 중~!')
