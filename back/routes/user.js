@@ -2,7 +2,6 @@ const express = require('express')
 const bcrypt = require('bcrypt')
 // db.User
 const { User } = require('../models')
-const { noExtendLeft } = require('sequelize/types/lib/operators')
 const router = express.Router()
 
 router.post('/', async (req, res, next) => {  // POST /user/'
@@ -18,6 +17,7 @@ router.post('/', async (req, res, next) => {  // POST /user/'
       // 300 리다이렉트
       // 400 클라이언트 에러
       // 500 서버 에러
+      // '이미 사용중인 아이디 입니다': 프론트의 erro.response.data가 된다.
       return res.status(403).send('이미 사용중인 아이디 입니다.')
     }
     // bcrypt()도 비동기라 await이 필요하다
@@ -29,6 +29,8 @@ router.post('/', async (req, res, next) => {  // POST /user/'
       nickname: req.body.nickname,
       password: hashedPassword
     })
+    // 차단은 브라우저가 차단. 허용은 서버가 허용.
+    // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3060')
     // 성공적으로 *작성됨*
     res.status(201).send('ok')
   } catch(error) {
