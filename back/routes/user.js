@@ -2,7 +2,7 @@ const express = require('express')
 const bcrypt = require('bcrypt')
 const passport = require('passport')
 // db.User
-const { User } = require('../models')
+const { User, Post } = require('../models')
 const router = express.Router()
 
 // 애매한 동작은 대부분 POST 이다.
@@ -30,7 +30,24 @@ router.post('/login', (req, res, next) => {
       // 사용자 정보를 프론트로 전송.
       // 이때 내부적으로 res.setHeader('Cookie', 'cxlhy')
       // 프론트는 보안에 취약한 정보(user 정보. 아이디, 비밀번호, 등등)를 들고 있는 대신 랜덤한 문자열(cxlhy)만 쿠키로 들고 있느낟.
-      return res.status(200).json(user)
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: user.id },
+        // 비밀번호 제외
+        attributes: {
+          exclude: ['password']
+        },
+        // 다른 테이블과의 관계를 합쳐서 보내줌
+        include: [{
+          model: Post
+        }, {
+          model: User,
+          as: 'Followings',
+        }, {
+          model: User,
+          as: 'Followers',
+        }]
+      })
+      return res.status(200).json(fullUserWithoutPassword)
     })
   })(req, res, next)
 })  // PSOT /user/login
@@ -72,7 +89,7 @@ router.post('/', async (req, res, next) => {  // POST /user/'
   
 })
 
-router.post('/user/logout', (req, res, next) => {
+router.post('/logout', (req, res, next) => {
   req.logOut()
   req.session.destroy()
   res.send('ok')
