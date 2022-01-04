@@ -1,10 +1,11 @@
 // local 로그인 전략
 const passport = require('passport')
-// 구조 분해 할당을 쓸 때 이름을 바꾸는 문법
+// 구조 분해 할당을 쓸 때 변수명 바꾸는 문법
 const { Strategy: LocalStrategy } = require('passport-local')
 const bcrypt = require('bcrypt')
 const { User } = require('../models')
 
+// 하기 내용이 index.js에서 local()로 할 때 실행됨.
 module.exports = () => {
   passport.use(new LocalStrategy({
     usernameField: 'email', // req.body.email
@@ -20,6 +21,8 @@ module.exports = () => {
         // done은 passport.authenticate에 전달되는 콜백같은 것.
         return done(null, false, { reason: '존재하지 않는 이메일입니다!' })
       }
+
+      // compare: 비동기 함수
       const result = await bcrypt.compare(password, user.password)
       if (result) {
         // 성공=>사용자 정보 넘겨준다.

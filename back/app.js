@@ -4,11 +4,17 @@
 // require, module.exports
 const express = require('express')
 const cors = require('cors')
+const session = require('express-session')
+const cookieParser = require('cookie-parser')
+
+const dotenv = require('dotenv')
 const postRouter = require('./routes/post')
 const userRouter = require('./routes/user')
 const db = require('./models')
+const passport = require('passport')
 const passportConfig = require('./passport')
 
+dotenv.config()
 const app = express()
 db.sequelize.sync()
   .then(() => {
@@ -28,6 +34,15 @@ app.use(express.json())
 // 프론트에서 form submit할 때
 app.use(express.urlencoded({ extended: true }))
 
+app.use(cookieParser(process.env.COOKIE_SECRET))
+app.use(session({
+  saveUninitialized: false,
+  resave: false,
+  // 쿠키에 보낼 랜덤한 문자열을 만드는 시크릿 키(이 키를 알면 랜덤한 문자열을 보고 복원 가능)
+  secret: process.env.COOKIE_SECRET
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 // app.get: 가져오다
 // app.post: 생성하다
 // app.put: 전체수정
