@@ -25,8 +25,9 @@ passportConfig()
 
 // use() 미들웨어. 라우터보다 위에 올려줘야한다. 순서가 매우 중요.
 app.use(cors({
-  origin: true,  // 보낸 곳의 주소가 자동으로 들어간다.
-  // credentials: false
+  origin: true,  // 보낸 곳의 주소가 자동으로 들어간다. // credentials: true와 함께 쓸 땐 보안이 더 철저해져서 '*' 값은 허용하지 않는다.
+  // 쿠키도 함께 전달된다.
+  credentials: true
 })) // 보안상 위험.
 // 프론트에서 보낸 data를 req.body에 넣어주는 역할
 // 프론트에서 json형태로 보낼 때

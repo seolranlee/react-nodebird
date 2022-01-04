@@ -5,6 +5,7 @@ import postSaga from './post';
 import userSaga from './user';
 
 axios.defaults.baseURL = 'http://localhost:3065';
+axios.defaults.withCredentials = true;
 
 export default function* rootSaga() {
   // all을 1) 애들을 동시에 실행할 수 있게 해준다.
