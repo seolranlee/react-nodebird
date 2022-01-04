@@ -1,4 +1,4 @@
-import { all, fork, put, takeLatest, delay } from '@redux-saga/core/effects';
+import { all, fork, put, takeLatest, delay, call } from '@redux-saga/core/effects';
 import axios from 'axios';
 import shortId from 'shortid';
 import {
@@ -32,29 +32,22 @@ function* loadPosts(action) {
 
 // addPost
 function addPostAPI(data) {
-  return axios.post('/api/post', data);
+  return axios.post('/post', { content: data });
 }
 
 function* addPost(action) {
   try {
-    // const result = yield call(addPostAPI, action.data)
-    yield delay(1000);
-    // 겹치지 않는 랜덤한 아이디를 생성해서 return해주는 npm.
-    const id = shortId.generate();
-    // post reducer 상태 변경
+    const result = yield call(addPostAPI, action.data);
     yield put({
       type: ADD_POST_SUCCESS,
-      data: {
-        id,
-        content: action.data,
-      },
+      data: result.data,
     });
     // ADD_POST_SUCCESS 후
     // saga는 동시에 여러 액션을 dispatch할 수 있다.
     // user reducer 상태 변경
     yield put({
       type: ADD_POST_TO_ME,
-      data: id,
+      data: result.data.id,
     });
   } catch (err) {
     yield put({
@@ -93,16 +86,15 @@ function* removePost(action) {
 
 // addComment
 function addCommentAPI(data) {
-  return axios.Comment('/api/post/${data.postId}/comment', data);
+  return axios.Comment(`/post/${data.postId}/comment`, data); // POST /post/1/comment
 }
 
 function* addComment(action) {
   try {
-    // const result = yield call(addCommentAPI, action.data)
-    yield delay(1000);
+    const result = yield call(addCommentAPI, action.data);
     yield put({
       type: ADD_COMMENT_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
   } catch (err) {
     yield put({
