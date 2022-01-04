@@ -4,10 +4,11 @@ const passport = require('passport')
 // db.User
 const { User, Post } = require('../models')
 const router = express.Router()
-
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares')
 // 애매한 동작은 대부분 POST 이다.
 // 미들웨어를 확장하는 방법(req, res, next)를 쓸 수 있게: express의 기법이다.
-router.post('/login', (req, res, next) => {
+// isLoggedIn: 미들웨어를 중간에 껴줌. 로그인을 하지 않은 사람들만 로그인 시도를 할 수 있게.
+router.post('/login', isNotLoggedIn, (req, res, next) => {
   // passport 전략 실행
   passport.authenticate('local', (err, user, info) => {
     // 서버에러
@@ -52,7 +53,7 @@ router.post('/login', (req, res, next) => {
   })(req, res, next)
 })  // PSOT /user/login
 
-router.post('/', async (req, res, next) => {  // POST /user/'
+router.post('/', isNotLoggedIn, async (req, res, next) => {  // POST /user/'
   try {
     const exUser = await User.findOne({
       where: {
@@ -89,7 +90,7 @@ router.post('/', async (req, res, next) => {  // POST /user/'
   
 })
 
-router.post('/logout', (req, res, next) => {
+router.post('/logout', isLoggedIn, (req, res, next) => {
   req.logOut()
   req.session.destroy()
   res.send('ok')

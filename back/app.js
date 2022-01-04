@@ -72,6 +72,11 @@ app.get('/post', (req, res) => {
 app.use('/post', postRouter)
 app.use('/user', userRouter)
 
+// 에러처리 미들웨어는 기본적으로 있지만 하기 처럼 직접 만들 수도 있음. 매게변수 4개.
+// app.use((err, req, res, next) => {
+
+// })
+
 app.listen(3065, () => {
   console.log('서버 실행 중~!')
 })
