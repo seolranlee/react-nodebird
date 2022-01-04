@@ -1,22 +1,22 @@
-import React from "react"
-import PropTypes from 'prop-types'
-import Link from 'next/Link'
-import { Menu, Input, Row, Col } from 'antd'
-import styled from 'styled-components'
-import { useSelector } from 'react-redux'
+import React from 'react';
+import PropTypes from 'prop-types';
+import Link from 'next/link';
+import { Menu, Input, Row, Col } from 'antd';
+import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 
-import UserProfile from '../components/UserProfile'
-import LoginForm from '../components/LoginForm'
+import UserProfile from './UserProfile';
+import LoginForm from './LoginForm';
 
 const SearchInput = styled(Input.Search)`
   vertical-align: middle;
-`
+`;
 
 const AppLayout = ({ children }) => {
   // const isLoggedIn = useSelector((state) => state.user.isLoggedIn)
 
   // 구조분해할당
-  const { me } = useSelector((state) => state.user)
+  const { me } = useSelector((state) => state.user);
 
   return (
     <div>
@@ -32,7 +32,7 @@ const AppLayout = ({ children }) => {
         </Menu.Item>
         <Menu.Item>
           <Link href="/signup"><a>회원가입</a></Link>
-        </Menu.Item>  
+        </Menu.Item>
       </Menu>
       {/* 컬럼 사이의 간격을 주는 용어: gutter */}
       <Row gutter={8}>
@@ -48,13 +48,13 @@ const AppLayout = ({ children }) => {
           <a href="https://github.com/seolranlee" target="_blank" rel="noreferrer noopener">Made by seorlanlee</a>
         </Col>
       </Row>
-        
+
     </div>
-  )
-}
+  );
+};
 
 AppLayout.propTypes = {
-  children: PropTypes.node.isRequired
-}
+  children: PropTypes.node.isRequired,
+};
 
-export default AppLayout
+export default AppLayout;

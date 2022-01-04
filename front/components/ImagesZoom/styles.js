@@ -1,7 +1,7 @@
 // folder로 만든 이유
 // styled component + component
-import styled, { createGlobalStyle } from 'styled-components'
-import { CloseOutlined } from '@ant-design/icons'
+import styled, { createGlobalStyle } from 'styled-components';
+import { CloseOutlined } from '@ant-design/icons';
 
 // ``: 함수를 호출하는 자바스크립트 문법(Tagged templates literals)
 // https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Template_literals#tagged_templates
@@ -14,7 +14,7 @@ export const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-`
+`;
 
 export const Header = styled.header`
   header: 44px;
@@ -30,7 +30,7 @@ export const Header = styled.header`
     color: #333;
     line-height: 44px;
   }
-`
+`;
 
 // antd 컴포넌트를 스타일링 할거라 별도로 뺌
 export const CloseBtn = styled(CloseOutlined)`
@@ -40,11 +40,11 @@ export const CloseBtn = styled(CloseOutlined)`
   padding: 15px;
   line-height: 14px;
   cursor: pointer;
-`
+`;
 export const SlickWrapper = styled.div`
   height: calc(100% - 44px);
   background: #090909;
-`
+`;
 
 export const ImgWrapper = styled.div`
   padding: 32px;
@@ -54,7 +54,7 @@ export const ImgWrapper = styled.div`
     margin: 0 auto;
     max-height: 750px;
   }
-`
+`;
 
 export const Indicator = styled.div`
   text-align: center;
@@ -70,7 +70,7 @@ export const Indicator = styled.div`
     color: white;
     font-size: 15px;
   }
-`
+`;
 
 // 스타일 오버라이딩을 위한
 export const Global = createGlobalStyle`
@@ -81,4 +81,4 @@ export const Global = createGlobalStyle`
   .ant-card-cover {
     transform: none !important;
   }
-`
+`;

@@ -1,17 +1,17 @@
-import React, { useCallback, useState } from 'react'
-import PropTypes from 'prop-types'
-import { PlusOutlined } from '@ant-design/icons'
-import ImagesZoom from './ImagesZoom'
+import React, { useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
+import { PlusOutlined } from '@ant-design/icons';
+import ImagesZoom from './ImagesZoom';
 
 const PostImages = ({ images }) => {
-  const [showImagesZoom, setShowImagesZoom] = useState(false)
+  const [showImagesZoom, setShowImagesZoom] = useState(false);
 
   const onZoom = useCallback(() => {
-    setShowImagesZoom(true)
-  }, [])
+    setShowImagesZoom(true);
+  }, []);
   const onClose = useCallback(() => {
-    setShowImagesZoom(false)
-  }, [])
+    setShowImagesZoom(false);
+  }, []);
 
   if (images.length === 1) {
     return (
@@ -19,7 +19,7 @@ const PostImages = ({ images }) => {
         <img role="presentation" src={images[0].src} alt={images[0].src} onClick={onZoom} />
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
-    )
+    );
   }
   if (images.length === 2) {
     return (
@@ -28,7 +28,7 @@ const PostImages = ({ images }) => {
         <img role="presentation" style={{ display: 'inline-block', width: '50%' }} src={images[1].src} alt={images[1].src} onClick={onZoom} />
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
-    )
+    );
   }
   return (
     <>
@@ -44,13 +44,14 @@ const PostImages = ({ images }) => {
       </div>
       {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
     </>
-  )
-
-}
+  );
+};
 
 PostImages.propTypes = {
   // shape: object 타입을 더 자세히 명시해두고 싶을 때 쓴다.
-  images: PropTypes.arrayOf(PropTypes.object)
-}
+  images: PropTypes.arrayOf(PropTypes.shape({
+    src: PropTypes.string,
+  })).isRequired,
+};
 
-export default PostImages
+export default PostImages;

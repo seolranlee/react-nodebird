@@ -1,22 +1,22 @@
-import React, { useEffect } from 'react'
-import Head from 'next/head'
-import Router from 'next/router'
+import React, { useEffect } from 'react';
+import Head from 'next/head';
+import Router from 'next/router';
 
-import AppLayout from '../components/AppLayout'
-import NicknamedEditForm from '../components/NicknamedEditForm'
-import FollowList from '../components/FollowList'
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
+import AppLayout from '../components/AppLayout';
+import NicknamedEditForm from '../components/NicknamedEditForm';
+import FollowList from '../components/FollowList';
 
 const Profile = () => {
-  const { me } = useSelector((state) => state.user)
+  const { me } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!(me && me.id)) {
-      Router.push('/')
+      Router.push('/');
     }
-  }, [me && me.id])
+  }, [me && me.id]);
 
-  if (!me) return null
+  if (!me) return null;
   return (
     <>
       <Head>
@@ -24,11 +24,11 @@ const Profile = () => {
       </Head>
       <AppLayout>
         <NicknamedEditForm />
-        <FollowList header="팔로잉" data={me.Followings}/>
-        <FollowList header="팔로워" data={me.Followers}/>
+        <FollowList header="팔로잉" data={me.Followings} />
+        <FollowList header="팔로워" data={me.Followers} />
       </AppLayout>
     </>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

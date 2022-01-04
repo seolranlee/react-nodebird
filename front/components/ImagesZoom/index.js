@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import Slick from 'react-slick'
-import { Global, Overlay, Header, CloseBtn, SlickWrapper, ImgWrapper, Indicator } from './styles'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import Slick from 'react-slick';
+import { Global, Overlay, Header, CloseBtn, SlickWrapper, ImgWrapper, Indicator } from './styles';
 
 const ImagesZoom = ({ images, onClose }) => {
-  const [currentSlide, setCurrentSlide] = useState(0)
+  const [currentSlide, setCurrentSlide] = useState(0);
   return (
     <Overlay>
       {/* <Global/> 아무데나 넣어도 됨 */}
@@ -42,12 +42,12 @@ const ImagesZoom = ({ images, onClose }) => {
         </div>
       </SlickWrapper>
     </Overlay>
-  )
-}
+  );
+};
 
 ImagesZoom.propTypes = {
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onClose: PropTypes.func.isRequired
-}
+  onClose: PropTypes.func.isRequired,
+};
 
-export default ImagesZoom
+export default ImagesZoom;
