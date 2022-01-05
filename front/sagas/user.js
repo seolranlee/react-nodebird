@@ -5,10 +5,38 @@ import {
   LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,
   SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE,
   FOLLOW_REQUEST, FOLLOW_SUCCESS, FOLLOW_FAILURE,
-  UNFOLLOW_REQUEST, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE,
+  UNFOLLOW_REQUEST, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE, LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOAD_MY_INFO_FAILURE,
 } from '../reducers/user';
 
 // 서버에 요청하는 함수는 일반 함수!!!
+
+function loadMyInfoAPI() {
+  return axios.get('/user');
+}
+
+function* loadMyInfo(action) {
+  try {
+    // call: 동기 함수 호출: 결과값을 기다리고 다음 줄로 넘어간다. await이랑 비슷하다고 생각
+    // fork: 비동기 함수 호출(non-blocking): 결과값을 기다리지 않고 다음 줄로 넘어간다.
+    const result = yield call(loadMyInfoAPI, action.data); // call을 써야 한다!!
+    // effect앞에는 항상 yield를 붙인다.
+    // put은 dispatch.
+    yield put(
+      // action 객체
+      {
+        type: LOAD_MY_INFO_SUCCESS,
+        data: result.data,
+      },
+    );
+    // const result = yield fork(loginAPI)
+  } catch (err) {
+    yield put({
+      type: LOAD_MY_INFO_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 // login
 function loginAPI(data) {
   return axios.post('/user/login', data);
@@ -118,6 +146,10 @@ function* signUp(action) {
   }
 }
 
+function* watchLoadMyInfo() {
+  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
+
 function* watchFollow() {
   yield takeLatest(FOLLOW_REQUEST, follow);
 }
@@ -157,6 +189,7 @@ function* watchSignUp() {
 
 export default function* userSaga() {
   yield all([
+    fork(watchLoadMyInfo),
     fork(watchFollow),
     fork(watchUnfollow),
     fork(watchLogin),

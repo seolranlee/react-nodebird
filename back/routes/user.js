@@ -5,7 +5,40 @@ const passport = require('passport')
 const { User, Post } = require('../models')
 const router = express.Router()
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares')
-// 애매한 동작은 대부분 POST 이다.
+
+router.get('/', async (req, res, next) => { // GET /user
+  try {
+    if (req.user) {
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: req.user.id },
+        // 비밀번호 제외
+        attributes: {
+          exclude: ['password']
+        },
+        // 다른 테이블과의 관계를 합쳐서 보내줌
+        include: [{
+          model: Post,
+          attributes: ['id'],
+        }, {
+          model: User,
+          as: 'Followings',
+          attributes: ['id'],
+        }, {
+          model: User,
+          as: 'Followers',
+          attributes: ['id'],
+        }]
+      })
+      res.status(200).json(fullUserWithoutPassword)
+    } else {
+      res.status(200).json(null)
+    }
+  } catch(error) {
+    console.error(error)
+    next(error)
+  }
+})
+// 애매한 동작은 대부분 POS  T 이다.
 // 미들웨어를 확장하는 방법(req, res, next)를 쓸 수 있게: express의 기법이다.
 // isLoggedIn: 미들웨어를 중간에 껴줌. 로그인을 하지 않은 사람들만 로그인 시도를 할 수 있게.
 router.post('/login', isNotLoggedIn, (req, res, next) => {
@@ -39,13 +72,17 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
         },
         // 다른 테이블과의 관계를 합쳐서 보내줌
         include: [{
-          model: Post
+          model: Post,
+          // data 효율을 위하여 id만 가져온다=>id만 가져와도 length는 셀 수 있으니까.
+          attributes: ['id'],
         }, {
           model: User,
           as: 'Followings',
+          attributes: ['id'],
         }, {
           model: User,
           as: 'Followers',
+          attributes: ['id'],
         }]
       })
       return res.status(200).json(fullUserWithoutPassword)

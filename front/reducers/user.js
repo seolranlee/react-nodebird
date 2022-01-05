@@ -1,27 +1,31 @@
 import produce from 'immer';
 
 export const initialState = {
-  followLoading: false, // 팔로우 시도중  // 로딩창 UI구현을 위함
+  loadMyInfoLoading: false, // 유저 정보 가져오기 시도중
+  loadMyInfoDone: false,
+  loadMyInfoError: false,
+
+  followLoading: false, // 팔로우 시도중
   followDone: false,
   followError: false,
 
-  unfollowLoading: false, // 언팔로우 시도중  // 로딩창 UI구현을 위함
+  unfollowLoading: false, // 언팔로우 시도중
   unfollowDone: false,
   unfollowError: false,
 
-  logInLoading: false, // 로그인 시도중  // 로딩창 UI구현을 위함
+  logInLoading: false, // 로그인 시도중
   logInDone: false,
   logInError: false,
 
-  logOutLoading: false, // 로그아웃 시도중  // 로딩창 UI구현을 위함
+  logOutLoading: false, // 로그아웃 시도중
   logOutDone: false,
   logOutError: false,
 
-  signUpLoading: false, // 회원가입 시도중  // 로딩창 UI구현을 위함
+  signUpLoading: false, // 회원가입 시도중
   signUpDone: false,
   signUpError: false,
 
-  changeNicknameLoading: false, // 닉네임 변경 시도중  // 로딩창 UI구현을 위함
+  changeNicknameLoading: false, // 닉네임 변경 시도중
   changeNicknameDone: false,
   changeNicknameError: false,
 
@@ -31,6 +35,10 @@ export const initialState = {
 };
 
 // 변수는 에디터가 관리해주기 때문에 오타가 날 확률이 줄어든다.
+export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
+export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
+export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE';
+
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
 export const LOG_IN_FAILURE = 'LOG_IN_FAILURE';
@@ -82,6 +90,20 @@ export const logoutRequestAction = () => ({
 
 const reducer = (state = initialState, action) => produce(state, (draft) => {
   switch (action.type) {
+    case LOAD_MY_INFO_REQUEST:
+      draft.loadMyInfoLoading = true;
+      draft.loadMyInfoError = null;
+      draft.loadMyInfoDone = false;
+      break;
+    case LOAD_MY_INFO_SUCCESS:
+      draft.loadMyInfoLoading = false;
+      draft.loadMyInfoDone = true;
+      draft.me = action.data;
+      break;
+    case LOAD_MY_INFO_FAILURE:
+      draft.loadMyInfoLoading = false;
+      draft.loadMyInfoError = action.error;
+      break;
     case FOLLOW_REQUEST:
       draft.followLoading = true;
       draft.followError = null;
