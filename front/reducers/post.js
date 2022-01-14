@@ -1,50 +1,8 @@
-import shortId from 'shortid';
 import produce from 'immer';
-import faker from 'faker';
 // reducer중심으로 생각.
 // 화면이 아니라 데이터를 먼저 구성.
 
 export const initialState = {
-  // mainPosts: [{
-  //   id: shortId.generate(),
-  //   User: {
-  //     id: 1,
-  //     nickname: 'seolranlee'
-  //   },
-  //   content: '첫 번째 게시글 #해시태그 #익스프레스',
-  //   Images: [
-  //     {
-  //       id: shortId.generate(),
-  //       src: 'https://ccdn.lezhin.com/v2/banners/explore_boys/images/17467.webp?updated=1634792020109'
-  //     },
-  //     {
-  //       id: shortId.generate(),
-  //       src: 'https://ccdn.lezhin.com/v2/banners/explore_boys/images/17630.webp?updated=1635250994567'
-  //     },
-  //     {
-  //       id: shortId.generate(),
-  //       src: 'https://ccdn.lezhin.com/v2/banners/explore_boys/images/17303.webp?updated=1634553971673s'
-  //     }
-  //   ],
-  //   Comments: [
-  //     {
-  //       id: shortId.generate(),
-  //       User: {
-  //         id: shortId.generate(),
-  //         nickname: 'user1'
-  //       },
-  //       content: '코멘트1'
-  //     },
-  //     {
-  //       id: shortId.generate(),
-  //       User: {
-  //         id: shortId.generate(),
-  //         nickname: 'user2'
-  //       },
-  //       content: '코멘트2'
-  //     }
-  //   ]
-  // }],
   mainPosts: [],
   imagePaths: [],
   hasMorePosts: true,
@@ -60,25 +18,6 @@ export const initialState = {
   addCommentDone: false,
   addCommentError: null,
 };
-
-export const generateDummyPost = (number) => Array(number).fill().map(() => ({
-  id: shortId.generate(),
-  User: {
-    id: shortId.generate(),
-    nickname: faker.name.findName(),
-  },
-  content: faker.lorem.paragraph(),
-  Images: [{
-    src: faker.image.image(),
-  }],
-  Comments: [{
-    User: {
-      id: shortId.generate(),
-      nickname: faker.name.findName(),
-    },
-    content: faker.lorem.sentence(),
-  }],
-}));
 
 // 사가가 맨 처음에 불러온다.
 // initialState.mainPosts = initialState.mainPosts.concat(generateDummyPost(10))
@@ -167,28 +106,29 @@ const reducer = (state = initialState, action) =>
         draft.addCommentDone = false;
         draft.addCommentError = null;
         break;
-      case ADD_COMMENT_SUCCESS:
+      case ADD_COMMENT_SUCCESS: {
         const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
         post.Comments.unshift(action.data);
         draft.addCommentLoading = false;
         draft.addCommentDone = true;
         break;
-        // const post = draft.mainPosts.find((v) => v.id === action.data.postId)
-        // post.Comments.unshift(dummyComment(action.data.content))
-        // draft.addCommentLoading = false
-        // draft.addCommentDone = true
+      }
+      // const post = draft.mainPosts.find((v) => v.id === action.data.postId)
+      // post.Comments.unshift(dummyComment(action.data.content))
+      // draft.addCommentLoading = false
+      // draft.addCommentDone = true
 
-        // const postIndex = state.mainPosts.findIndex((v) => v.id === action.data.postId)
-        // const post = {...state.mainPosts[postIndex]}
-        // post.Comments =  [dummyComment(action.data.content), ...post.Comments]
-        // const mainPosts = [...state.mainPosts]
-        // mainPosts[postIndex] = post
-        // return {
-        //   ...state,
-        //   mainPosts,
-        //   addCommentLoading: false,
-        //   addCommentDone: true
-        // }
+      // const postIndex = state.mainPosts.findIndex((v) => v.id === action.data.postId)
+      // const post = {...state.mainPosts[postIndex]}
+      // post.Comments =  [dummyComment(action.data.content), ...post.Comments]
+      // const mainPosts = [...state.mainPosts]
+      // mainPosts[postIndex] = post
+      // return {
+      //   ...state,
+      //   mainPosts,
+      //   addCommentLoading: false,
+      //   addCommentDone: true
+      // }
       case ADD_COMMENT_FAILURE:
         draft.addCommentLoading = false;
         draft.addCommentError = action.error;

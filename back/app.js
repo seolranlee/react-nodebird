@@ -6,9 +6,11 @@ const express = require('express')
 const cors = require('cors')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
+const morgan = require('morgan')
 
 const dotenv = require('dotenv')
 const postRouter = require('./routes/post')
+const postsRouter = require('./routes/posts')
 const userRouter = require('./routes/user')
 const db = require('./models')
 const passport = require('passport')
@@ -23,6 +25,7 @@ db.sequelize.sync()
   .catch(console.error)
 passportConfig()
 
+app.use(morgan('dev'))
 // use() 미들웨어. 라우터보다 위에 올려줘야한다. 순서가 매우 중요.
 app.use(cors({
   origin: true,  // 보낸 곳의 주소가 자동으로 들어간다. // credentials: true와 함께 쓸 땐 보안이 더 철저해져서 '*' 값은 허용하지 않는다.
@@ -51,26 +54,10 @@ app.use(passport.session())
 // app.patch: 부분수정
 // app.options: 찔러보기(나 요청보낼 수 있어..?)
 // app.head: 헤더만 가져오기(헤더/바디)
-app.get('/', (req, res) => {
-  res.send('hello express')
-})
-
-app.get('/', (req, res) => {
-  res.send('hello api')
-})
-
-app.get('/post', (req, res) => {
-  // data는 보통 json으로 표현한다.
-  // 실제로 api들은 json을 응답한다.
-  res.json([
-    { id: 1, content: 'hello1' },
-    { id: 2, content: 'hello2' },
-    { id: 3, content: 'hello3' },
-  ])
-})
 
 // 중복되는 url(/post)을 앞으로 뽑아줌.
 app.use('/post', postRouter)
+app.use('/posts', postsRouter)
 app.use('/user', userRouter)
 
 // 에러처리 미들웨어는 기본적으로 있지만 하기 처럼 직접 만들 수도 있음. 매게변수 4개.

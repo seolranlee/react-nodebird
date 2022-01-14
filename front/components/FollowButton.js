@@ -36,7 +36,7 @@ FollowButton.propTypes = {
       nickname: PropTypes.string,
     }),
     content: PropTypes.string,
-    createdAt: PropTypes.object,
+    createdAt: PropTypes.string,
     // arrayOf(PropTypes.object): 객체들의 배열이라는 뜻
     Comments: PropTypes.arrayOf(PropTypes.object),
     Images: PropTypes.arrayOf(PropTypes.object),

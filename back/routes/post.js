@@ -16,8 +16,13 @@ router.post('/', isLoggedIn, async (req, res) => {  // POST /post
         model: Image
       }, {
         model: Comment,
+        include: [{
+          model: User,
+          attributes: ['id', 'nickname'],
+        }]
       }, {
         model: User,
+        attributes: ['id', 'nickname'],
       }]
     })
     res.status(201).json(fullPost)
@@ -27,7 +32,7 @@ router.post('/', isLoggedIn, async (req, res) => {  // POST /post
   }
 })
 
-router.post('/:postId/comment', isLoggedIn, async (req, res) => {  // POST /post/1/comment
+router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {  // POST /post/1/comment
   try {
     // 서버쪽에서 좀 더 꼼꼼히 방어.
     // 존재하지 않은 포스트에 코멘트를 다는 행위를 시도하지 못하게. 
@@ -39,9 +44,17 @@ router.post('/:postId/comment', isLoggedIn, async (req, res) => {  // POST /post
     }
     const comment = await Comment.create({
       content: req.body.content,
-      PostId: req.params.postId,
+      PostId: parseInt(req.params.postId, 10),
+      UserId: req.user.id,
     })
-    res.status(201).json(comment)
+    const fullComment = await Comment.findOne({
+      where: { id: comment.id },
+      include: [{
+        model: User,
+        attributes: ['id', 'nickname']
+      }]
+    })
+    res.status(201).json(fullComment)
   } catch (error) {
     console.error(error)
     next(error)

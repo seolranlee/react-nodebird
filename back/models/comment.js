@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     'Comment', 
     { // MySQL에는 Comments로 테이블 생성. // 시퀄라이즈와 mysql간의 규칙.
       content: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.TEXT,
         allowNull: false
       }
     // belongsTo의 역할
