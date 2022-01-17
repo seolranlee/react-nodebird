@@ -23,6 +23,10 @@ router. get('/', async (req, res, next) => { // GET /posts (여러개의 게시�
           model: User,
           attributes: ['id', 'nickname'],
         }]
+      }, {
+        model: User,  // 좋아요 누른 사람
+        as: 'Likers',
+        attributes: ['id']
       }],
     })
     console.log(posts)

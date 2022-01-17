@@ -17,12 +17,17 @@ router.post('/', isLoggedIn, async (req, res) => {  // POST /post
       }, {
         model: Comment,
         include: [{
-          model: User,
+          model: User,  // 댓글 작성자
           attributes: ['id', 'nickname'],
         }]
       }, {
-        model: User,
+        model: User,  // 게시글 작성자
         attributes: ['id', 'nickname'],
+      }, {
+        model: User,  // 좋아요 누른 사람
+        // 댓글, 게시글 작성자와 구별하기 위해
+        as: 'Likers',
+        attributes: ['id']
       }]
     })
     res.status(201).json(fullPost)
@@ -56,6 +61,37 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {  // POST
     })
     res.status(201).json(fullComment)
   } catch (error) {
+    console.error(error)
+    next(error)
+  }
+})
+
+router.patch('/:postId/like', async (req, res, next) => { // PATCH /post/1/like
+  try {
+    const post = await Post.findOne({ where: { id: req.params.postId } })
+    if (!post) {
+      // 금지
+      return res.status(403).send('게시글이 존재하지 않습니다.')
+    }
+    // DB 조작 시에는 항상 await을 붙인다.
+    await post.addLikers(req.user.id)
+    res.json({ PostId: post.id, UserId: req.user.id })
+  } catch(error) {
+    console.error(error)
+    next(error)
+  }
+})
+
+router.delete('/:postId/like', async (req, res, next) => {  // DELETE /post/1/like
+  try {
+    const post = await Post.findOne({ where: { id: req.params.postId } })
+    if (!post) {
+      // 금지
+      return res.status(403).send('게시글이 존재하지 않습니다.')
+    }
+    await post.removeLikers(req.user.id)
+    res.json({ PostId: post.id, UserId: req.user.id })
+  } catch(error) {
     console.error(error)
     next(error)
   }
