@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Card, Avatar, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -12,10 +12,14 @@ const UserProfile = () => {
     dispatch(logoutRequestAction());
   }, []);
 
+  useEffect(() => {
+    console.log(me.Posts.length);
+  }, [me.Posts.length]);
+
   return (
     <Card
       actions={[
-        <div key="twit">tweet<br />{me.Posts.length}</div>,
+        <div key="tweet">tweet<br />{me.Posts.length}</div>,
         <div key="followings">팔로잉<br />{me.Followings.length}</div>,
         <div key="followers">팔로워<br />{me.Followers.length}</div>,
       ]}

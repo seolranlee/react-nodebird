@@ -1,4 +1,4 @@
-import { all, fork, put, takeLatest, delay, call } from '@redux-saga/core/effects';
+import { all, fork, put, takeLatest, call } from '@redux-saga/core/effects';
 import axios from 'axios';
 import {
   LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
@@ -106,16 +106,16 @@ function* addPost(action) {
 
 // removePost
 function removePostAPI(data) {
-  return axios.delete('/api/post', data);
+  // data: post.id
+  return axios.delete(`post/${data}`);
 }
 
 function* removePost(action) {
   try {
-    // const result = yield call(addPostAPI, action.data)
-    yield delay(1000);
+    const result = yield call(removePostAPI, action.data);
     yield put({
       type: REMOVE_POST_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
     // ADD_POST_SUCCESS 후
     // saga는 동시에 여러 액션을 dispatch할 수 있다.

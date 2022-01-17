@@ -139,7 +139,7 @@ const reducer = (state = initialState, action) =>
       case REMOVE_POST_SUCCESS:
         // 삭제 시엔 filter가 편함.
         // immer의 의미론적으로는 slice로 제거하는게 더 맞긴함.
-        draft.mainPosts = state.mainPosts.filter((v) => v.id !== action.data);
+        draft.mainPosts = state.mainPosts.filter((v) => v.id !== action.data.PostId);
         draft.removePostLoading = false;
         draft.removePostDone = true;
         break;

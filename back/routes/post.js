@@ -66,7 +66,7 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {  // POST
   }
 })
 
-router.patch('/:postId/like', async (req, res, next) => { // PATCH /post/1/like
+router.patch('/:postId/like', isLoggedIn, async (req, res, next) => { // PATCH /post/1/like
   try {
     const post = await Post.findOne({ where: { id: req.params.postId } })
     if (!post) {
@@ -82,7 +82,7 @@ router.patch('/:postId/like', async (req, res, next) => { // PATCH /post/1/like
   }
 })
 
-router.delete('/:postId/like', async (req, res, next) => {  // DELETE /post/1/like
+router.delete('/:postId/like', isLoggedIn, async (req, res, next) => {  // DELETE /post/1/like
   try {
     const post = await Post.findOne({ where: { id: req.params.postId } })
     if (!post) {
@@ -97,7 +97,21 @@ router.delete('/:postId/like', async (req, res, next) => {  // DELETE /post/1/li
   }
 })
 
-router.delete('/', (req, res) => {  // DELETE /post
-  res.json({ id: 1 })
+router.delete('/:postId', isLoggedIn, async (req, res, next) => {  // DELETE /post/1
+  try {
+    // 시퀄라이즈에서 제거할 때 쓰는 메소드
+    await Post.destroy({
+      where: {
+        id: req.params.postId,
+        // 내가 쓴 글만 지울 수 있게 하기 위해
+        UserId: req.user.id,
+      }
+    })
+    res.status(200).json({ PostId: parseInt(req.params.postId, 10)})
+  } catch(error) {
+    console.error(error)
+    next(error)
+  }
 })
+
 module.exports = router

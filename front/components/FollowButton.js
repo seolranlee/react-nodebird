@@ -21,6 +21,12 @@ const FollowButton = ({ post }) => {
       });
     }
   }, [isFollowing]);
+
+  // hooks 보다 아래에 적어줘야 한다.
+  if (post.User.id === me.id) {
+    return null;
+  }
+
   return (
     <Button loading={followLoading || unfollowLoading} onClick={onClickButton}>
       {isFollowing ? '언팔로우' : '팔로우'}

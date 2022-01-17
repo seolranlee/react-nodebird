@@ -51,9 +51,9 @@ export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
 
-export const CHANGE_NICKNAME_UP_REQUEST = 'CHANGE_NICKNAME_UP_REQUEST';
-export const CHANGE_NICKNAME_UP_SUCCESS = 'CHANGE_NICKNAME_UP_SUCCESS';
-export const CHANGE_NICKNAME_UP_FAILURE = 'CHANGE_NICKNAME_UP_FAILURE';
+export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST';
+export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS';
+export const CHANGE_NICKNAME_FAILURE = 'CHANGE_NICKNAME_FAILURE';
 
 export const FOLLOW_REQUEST = 'FOLLOW_REQUEST';
 export const FOLLOW_SUCCESS = 'FOLLOW_SUCCESS';
@@ -70,14 +70,6 @@ export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
 
 // data관련된건 reducer에서
-// const dummyUser = (data) => ({
-//   ...data,
-//   nickname: 'seolranlee',
-//   id: 1,
-//   Posts: [{ id: 1 }],
-//   Followings: [{ nickname: 'yeonju' }, { nickname: 'foo' }, { nickname: 'bar' }],
-//   Followers: [{ nickname: 'yeonju' }, { nickname: 'foo' }, { nickname: 'bar' }],
-// });
 // 그때 그때 액션을 만드는 action creater
 export const loginRequestAction = (data) => ({
   type: LOG_IN_REQUEST,
@@ -173,16 +165,17 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.signUpLoading = false;
       draft.signUpError = action.error;
       break;
-    case CHANGE_NICKNAME_UP_REQUEST:
+    case CHANGE_NICKNAME_REQUEST:
       draft.changeNicknameLoading = true;
       draft.changeNicknameDone = false;
       draft.changeNicknameError = null;
       break;
-    case CHANGE_NICKNAME_UP_SUCCESS:
+    case CHANGE_NICKNAME_SUCCESS:
+      draft.me.nickname = action.data.nickname;
       draft.changeNicknameLoading = false;
       draft.changeNicknameDone = true;
       break;
-    case CHANGE_NICKNAME_UP_FAILURE:
+    case CHANGE_NICKNAME_FAILURE:
       draft.changeNicknameLoading = false;
       draft.changeNicknameError = action.error;
       break;
@@ -197,7 +190,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       //   }
       // }
     case REMOVE_POST_OF_ME:
-      draft.me.Posts = draft.me.Posts.filter((v) => v.id === action.data);
+      draft.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data);
       break;
       // return {
       //   ...state,
